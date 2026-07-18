@@ -1,4 +1,4 @@
-# FocusGuard
+# FocusTracker
 
 - Created by Sohdai Yokokawa
 - Project for Midnight Hackathon
@@ -14,33 +14,46 @@
 ## App Structure
 
 ```
-FocusGuard
+FocusTracker/
 │
-├── README.md
-├── .gitignore
+├── app.py                 # Main app
+├── requirements.txt
 │
-├── arduino/
-│   ├── PrivateFocusTracker.ino
-│   ├── config.h
-│   ├── sensors.cpp
-│   ├── sensors.h
-│   ├── inference.cpp
-│   ├── inference.h
-│   ├── model.h
-│   ├── led.cpp
-│   └── led.h
+├── pages/
+│   ├── Dashboard.py
+│   ├── Focus_Session.py
+│   ├── History.py
+│   └── Privacy.py
 │
-├── data/
-│   ├── focused.csv
-│   ├── distracted.csv
-│   └── away.csv
+├── components/
+│   ├── timer.py
+│   ├── charts.py
+│   ├── cards.py
+│   └── sidebar.py
 │
-└── training/
-    ├── collect_data.py
-    └── train.ipynb
+├── services/
+│   ├── ai.py
+│   ├── storage.py
+│   └── analytics.py
+│
+└── data/
+    └── sessions.json
+
 ```
 
 ---
 
 ## Setup Instructions
 
+```bash
+# Create a virtual environment
+python -m venv .venv
+source .venv/bin/activate   # MacOS/Linux
+.venv\Scripts\activate      # Windows
+
+# Install packages
+pip install -r requirements.txt
+
+# Run the app
+streamlit run app.py
+```
