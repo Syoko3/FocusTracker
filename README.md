@@ -7,7 +7,7 @@
 
 ## App Information
 
-
+Many productivity apps collect personal information, such as study schedules, work hours, daily routines, and time spent on tasks. This information is often uploaded to cloud servers, where users have limited control over how it is stored or analyzed. FocusTracker helps users to improve their focus without sending any of their study data to the external servers.
 
 ---
 
@@ -55,5 +55,11 @@ source .venv/bin/activate   # MacOS/Linux
 pip install -r requirements.txt
 
 # Run the app
-streamlit run app.py
+python -m streamlit run app.py
 ```
+
+---
+
+## User Flow
+
+Open App --> Dashboard --> Start Focus Session --> Study --> End Session --> Calculate Focus Score --> Save Session Locally --> Update Dashboard --> View History & Progress
