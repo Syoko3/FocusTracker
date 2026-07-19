@@ -135,6 +135,7 @@ def render_timer_ui():
     with col1:
         if st.button("Start Session", use_container_width=True):
             start_timer()
+            st.rerun()
     with col2:
         pause_label = "Resume Session" if st.session_state.session_paused else "Pause Session"
         pause_disabled = not st.session_state.session_active
@@ -143,10 +144,12 @@ def render_timer_ui():
                 resume_timer()
             else:
                 pause_timer()
+            st.rerun()
     with col3:
         end_disabled = not st.session_state.session_active and not st.session_state.session_elapsed
         if st.button("End Session", use_container_width=True, disabled=end_disabled):
             end_timer()
+            st.rerun()
 
     st.divider()
     elapsed_seconds = get_elapsed_seconds()

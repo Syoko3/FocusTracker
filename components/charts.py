@@ -1,5 +1,6 @@
 """Reusable chart helpers for dashboard and history pages."""
 
+import altair as alt
 import pandas as pd
 import streamlit as st
 
@@ -49,9 +50,17 @@ def render_focus_trend_chart(daily_summary):
 
 
 def render_weekly_progress_chart(weekly_summary):
-    """Render a weekly progress bar chart."""
+    """Render a weekly progress bar chart with horizontal x-axis labels."""
 
     if weekly_summary.empty:
         return
 
-    st.bar_chart(weekly_summary.set_index("week")["Weekly_Study_Time"])
+    chart = (
+        alt.Chart(weekly_summary)
+        .mark_bar()
+        .encode(
+            x=alt.X("week:N", title="Week", axis=alt.Axis(labelAngle=0)),
+            y=alt.Y("Weekly_Study_Time:Q", title="Study time (min)"),
+        )
+    )
+    st.altair_chart(chart, use_container_width=True)
