@@ -95,6 +95,12 @@ def test_sessions_pdf_is_valid_pdf_bytes():
     assert len(data) > 500
 
 
+def test_sessions_pdf_embeds_chart_content():
+    sessions = [make_session("2026-07-18"), make_session("2026-07-17")]
+    data = report.sessions_to_pdf(sessions)
+    assert b"/XObject" in data
+
+
 def test_sessions_pdf_handles_empty_sessions():
     data = report.sessions_to_pdf([])
     assert data.startswith(b"%PDF-")
