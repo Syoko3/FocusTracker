@@ -128,16 +128,10 @@ def daily_average_score(sessions, day=None):
     return sum(session_score(session) for session in todays) / len(todays)
 
 
-def current_streak(sessions, today=None):
-    """Consecutive days with at least one session, ending today or yesterday.
+def _streak_from_days(days, today):
+    """Count consecutive days ending today or yesterday from a set of dates."""
 
-    Returns 0 when the most recent session is older than yesterday, so the
-    number always reflects an *active* streak rather than the longest ever.
-    """
-
-    today = today or date.today()
-    days = {parse_date(session.get("date")) for session in sessions}
-    days.discard(None)
+    days = {day for day in days if day is not None}
     if not days:
         return 0
 
@@ -153,6 +147,30 @@ def current_streak(sessions, today=None):
         streak += 1
         cursor -= timedelta(days=1)
     return streak
+
+
+def current_streak(sessions, today=None):
+    """Consecutive days with at least one session, ending today or yesterday.
+
+    Returns 0 when the most recent session is older than yesterday, so the
+    number always reflects an *active* streak rather than the longest ever.
+    """
+
+    today = today or date.today()
+    days = {parse_date(session.get("date")) for session in sessions}
+    return _streak_from_days(days, today)
+
+
+def streak_from_dates(dates, today=None):
+    """Current streak computed from a bare iterable of dates or ISO strings.
+
+    Used when streak history is tracked independently of session records (so
+    that deleting sessions does not reset the streak).
+    """
+
+    today = today or date.today()
+    days = {parse_date(value) for value in dates}
+    return _streak_from_days(days, today)
 
 
 def recent_sessions(sessions, limit=5):

@@ -13,7 +13,7 @@ from components.charts import (
 )
 from components.sidebar import render_sidebar
 from services import analytics
-from services.storage import load_sessions
+from services.storage import load_sessions, streak_dates
 
 
 def main():
@@ -26,7 +26,8 @@ def main():
 
     sessions = load_sessions()
     stats = analytics.summarize(sessions)
-    streak = stats["current_streak"]
+    # Streak is tracked independently so deleting sessions never resets it.
+    streak = analytics.streak_from_dates(streak_dates())
 
     render_metric_row(
         [

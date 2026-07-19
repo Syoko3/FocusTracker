@@ -3,7 +3,7 @@
 import streamlit as st
 
 from services import analytics
-from services.storage import load_sessions
+from services.storage import streak_dates
 
 
 def render_sidebar():
@@ -21,6 +21,5 @@ def render_sidebar():
     else:
         st.sidebar.caption("Set your goal for today.")
 
-    sessions = load_sessions()
-    streak = analytics.current_streak(sessions)
+    streak = analytics.streak_from_dates(streak_dates())
     st.sidebar.metric("Current Streak", f"{streak} day{'s' if streak != 1 else ''}")

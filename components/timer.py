@@ -5,6 +5,7 @@ from datetime import datetime
 
 import streamlit as st
 
+from services import report
 from services.ai import calculate_focus_score
 from services.storage import save_session
 
@@ -92,7 +93,9 @@ def end_timer():
         return
 
     elapsed_seconds = get_elapsed_seconds()
-    duration_minutes = max(1, round(elapsed_seconds / 60, 2))
+    duration_seconds = int(round(elapsed_seconds))
+    # The scoring heuristic works in minutes; storage keeps the canonical seconds.
+    duration_minutes = max(1, round(duration_seconds / 60, 2))
     score = calculate_focus_score(duration_minutes, st.session_state.pause_count)
     completed_at = datetime.now()
 
@@ -100,8 +103,7 @@ def end_timer():
         "title": st.session_state.session_title or "Focus Session",
         "date": completed_at.date().isoformat(),
         "timestamp": completed_at.isoformat(),
-        "duration": duration_minutes,
-        "duration_minutes": duration_minutes,
+        "duration": duration_seconds,
         "score": score,
         "pause_count": st.session_state.pause_count,
         "notes": f"Paused {st.session_state.pause_count} times during the session.",
@@ -114,9 +116,7 @@ def end_timer():
     st.session_state.session_started_at = None
     st.session_state.session_elapsed = 0
     st.session_state.session_completed = True
-
-    st.success("Session saved successfully. Returning to your dashboard...")
-    st.switch_page("pages/Dashboard.py")
+    st.session_state.last_session = session_payload
 
 
 def render_timer_ui():
@@ -160,5 +160,25 @@ def render_timer_ui():
             st.success("Session is running. Stay focused and keep the timer going.")
             time.sleep(1)
             st.rerun()
+    elif st.session_state.session_completed and st.session_state.get("last_session"):
+        render_completed_session(st.session_state.last_session)
     else:
         st.info("No active session right now. Press Start Session to begin.")
+
+
+def render_completed_session(session):
+    """Show the just-finished session with a downloadable report."""
+
+    st.divider()
+    st.success(
+        f"Session saved! Score: {session['score']}% "
+        f"over {format_duration(session['duration'])}."
+    )
+    st.download_button(
+        "Download this session report (PDF)",
+        data=report.session_summary_pdf(session),
+        file_name="session_report.pdf",
+        mime="application/pdf",
+    )
+    if st.button("View Dashboard"):
+        st.switch_page("pages/Dashboard.py")

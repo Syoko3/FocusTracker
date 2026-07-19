@@ -64,8 +64,8 @@ def render_home_page():
 
     ### Features
 
-    - ⏱️ Pomodoro-style focus sessions
-    - 🤖 Local AI focus scoring
+    - ⏱️ Focus sessions
+    - 🤖 AI focus scoring
     - 📈 Progress dashboard
     - 📚 Session history
 
@@ -105,6 +105,17 @@ def render_home_page():
     """
     )
 
+    st.markdown(
+        """
+    ### How your data is handled
+
+    - **Local-only storage.** Sessions are saved to a JSON file on this device.
+    - **No accounts.** Nothing is uploaded, synced, or shared with a server.
+    - **Local scoring.** Focus scores are computed on-device, never sent away.
+    - **Your control.** Delete the local data file at any time to remove your history.
+    """
+    )
+
 
 def main():
     """Configure app navigation and run the selected FocusTracker page."""
@@ -116,7 +127,6 @@ def main():
         st.Page("pages/Dashboard.py", title="Dashboard", icon="📊"),
         st.Page("pages/Focus_Session.py", title="Focus Session", icon="⏱️"),
         st.Page("pages/History.py", title="History", icon="📚"),
-        st.Page("pages/Privacy.py", title="Privacy", icon="🔒"),
     ]
 
     st.navigation(pages).run()

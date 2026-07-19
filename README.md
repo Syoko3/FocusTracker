@@ -5,7 +5,7 @@
 
 ---
 
-## App Information
+## App Overview
 
 Many productivity apps collect personal information, such as study schedules, work hours, daily routines, and time spent on tasks. This information is often uploaded to cloud servers, where users have limited control over how it is stored or analyzed. FocusTracker helps users to improve their focus without sending any of their study data to the external servers.
 
@@ -18,6 +18,7 @@ FocusTracker/
 │
 ├── app.py                 # Main app
 ├── requirements.txt
+├── .gitignore
 │
 ├── pages/
 │   ├── Dashboard.py
@@ -33,11 +34,19 @@ FocusTracker/
 │
 ├── services/
 │   ├── ai.py
+│   ├── analytics.py
 │   ├── storage.py
-│   └── analytics.py
+│   └── report.py
 │
-└── data/
-    └── sessions.json
+├── data/
+│   ├── sessions.json
+│   └── streak.json
+│
+└── tests/
+    ├── test_ai.py
+    ├── test_analytics.py
+    ├── test_storage.py
+    └── test_report.py
 
 ```
 
@@ -56,6 +65,9 @@ pip install -r requirements.txt
 
 # Run the app
 python -m streamlit run app.py
+
+# Test the app
+pytest tests/
 ```
 
 ---
