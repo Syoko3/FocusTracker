@@ -23,6 +23,17 @@ def _session_label(index, session):
     return f"{day_text} — {title} ({analytics.session_score(session):.0f}%)"
 
 
+def _clear_completed_session():
+    """Forget the last-completed session so the Focus Session page resets.
+
+    Without this, deleting sessions would leave the "Session saved!" banner
+    lingering on the Focus Session page.
+    """
+
+    st.session_state.session_completed = False
+    st.session_state.last_session = None
+
+
 def render_export_and_manage(sessions):
     """Render download buttons and delete controls for the stored sessions."""
 
@@ -67,6 +78,7 @@ def render_export_and_manage(sessions):
     )
     if st.button("Delete selected session"):
         delete_session(selected_index)
+        _clear_completed_session()
         st.success("Session deleted. Your streak is preserved.")
         st.rerun()
 
@@ -74,6 +86,7 @@ def render_export_and_manage(sessions):
         confirm = st.checkbox("Yes, permanently delete all my sessions")
         if st.button("Delete everything", disabled=not confirm):
             delete_all_sessions()
+            _clear_completed_session()
             st.success("All sessions deleted. Your streak is preserved.")
             st.rerun()
 
